@@ -93,6 +93,10 @@ class Client {
     private JTextArea chatArea;
     private JTextField messageField;
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(Client::new);
+    }
+
     public Client() {
         JFrame frame = new JFrame("Чат клиент");
         chatArea = new JTextArea(20, 50);
@@ -136,13 +140,16 @@ class Client {
     }
 
     private void loadChatHistory() {
-        try (BufferedReader br = new BufferedReader(new FileReader("chat_log.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                chatArea.append(line + "\n");
+        File logFile = new File("chat_log.txt");
+        if (logFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(logFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    chatArea.append(line + "\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
